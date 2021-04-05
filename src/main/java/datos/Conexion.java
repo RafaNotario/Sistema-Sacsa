@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 //jdbc:mysql://localhost/admindcr?useSSL=false&useTimezone=true&serverTimezone=UTC
 public class Conexion {
-    private static final String JDBC_URL = "jdbc:mysql://localhost/control_clientes?useSSL=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+    private static final String JDBC_URL = "jdbc:mysql://localhost/sacsavd?zeroDateTimeBehavior=convertToNull&useSSL=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true";
     private static final String JDBC_USER = "root";
     private static final String JDBC_PASSWORD = "0ehn4TNU5R";
     

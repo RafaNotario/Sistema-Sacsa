@@ -1,0 +1,150 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background: #FDFCFA;/* #FDFCFA #3EF5BB */
+}
+
+header{
+    position: fixed;
+    width: 100%;
+    background: #3DADF2;/*#558391  #1195A8 #AA1611 */
+    z-index: 1;
+    margin:0;
+    top: 0;
+    left: 0;
+}
+
+.contenedor{
+    position: relative;
+    margin: 0;
+    width: 100%;
+    height: 4em;
+    border-radius: 5px;
+    text-align: right;
+    padding: 5px;
+    color: white;
+    text-decoration: none;
+    margin-bottom: 5px;
+}
+header a{
+    width: 40px;
+    background: rgba(255,255,255,0.3);
+    color: white;
+    padding: 5px;
+}
+header span{
+    float: left;
+    margin:0;
+    padding: 10px;
+    font-size:20px;
+    cursor:pointer;
+}
+/* CSS MENU */
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #3DADF2;/*#558391 #FF5729 #1195A8 #111  #AA1611  */
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    margin-top: 4em;
+}
+
+img{
+    border-radius: 10px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #FCFFF5; /*FCFFF5 818181*/
+    display: block;
+    transition: 0.3s;
+    border-bottom: 1px solid rgba(255,255,255,0.5);/*linea de separacion blanca de los item del menu a*/
+}
+.sidenav img {
+    width: 50%;
+}
+
+.sidenav a:hover{/*, .offcanvas a:focus*/
+    color: #193441; /*f1f1f1 193441 */
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    float: none;
+}
+
+a.closebtn{
+    text-decoration: none;
+}
+/* COLOR DE FONDO MAIN ARCHIVO PRINCIPAL*/
+#main {
+    height: 100%;
+    width: 100%;
+    transition: margin-left 1s;
+    padding: 16px;
+    background: #E6F5F7; /*#F3F2EF #FDFCFA; #454445*/
+    position: relative;
+}
+
+
+.prueba{
+    margin-top: 8em;
+}
+
+/**** SUBMENU  */
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+/*codigo my mamalon*/
+.sub{
+    display: none;
+}
