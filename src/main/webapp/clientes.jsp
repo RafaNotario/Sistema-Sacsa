@@ -19,121 +19,21 @@
         <jsp:include page="WEB-INF/paginas/comunes/cabecero.jsp"/>
 
         <!-- BOTONES DE NAVEGACION-->
-
-
         <main>
-            <div id="mySidenav" class="sidenav">
-                <aside>
-                <center>
-                    <img src="img/sacsavd_logo.png" class="img-fluid" alt="Logo SACSAVD"><!--class="img-fluid" alt="Responsive image" -->
-                </center>
-                <a class="closebtn" href="javascript:void(0)" onclick="closeNav()">&times;</a>
-                <a id="asist" href="#"> USUARIOS</a>
-                <a id="alta" href="#">CARTERAS</a>
-                <a id="ver" href="#">STATUS</a>
-                <a id="pagos" href="#">VER TODOS</a>
-</aside>
-                <aside>
-                    <div id="sidebar" class="nav-collapse ">
-                        <!-- sidebar menu start-->
-                        <ul class="sidebar-menu" id="nav-accordion">
+            <jsp:include page="WEB-INF/paginas/comunes/menuLateral.jsp"/>
 
-                            <h5 class="centered"><?php echo $_SESSION["name_user"] ?></h5>
-                            <li class="mt">
-                                <a class="active" href="frm_main.php">
-                                    <i class="fa fa-dashboard"></i>
-                                    <span>Panel Principal</span>
-                                </a>
-                            </li>
-                            <li class="sub-menu">
-                                <a href="javascript:;">
-                                    <i class="fa fa-cogs"></i>
-                                    <span>Administracion </span>
-                                    <i class="fa fa-caret-down" style="float-right"></i>
-                                </a>
-                                <ul class="sub">
-                                    <li><a href="frm_usuarios.php">Usuarios</a></li>
-                                    <li><a href="frm_almacen.php">Almacen</a></li>
-                                    <li><a href="frm_eligealmacen.php">Establecer Almacen</a></li>
-                                    <li><a href="frm_costos.php">Costo Recargas</a></li>
-                                    <li><a href="frm_tipocartera.php">Tipo Cartera</a></li>
-                                </ul>
-                            </li>
-                            <li class="sub-menu">
-                                <a href="javascript:;">
-                                    <i class="fa fa-desktop"></i>
-                                    <span>Operaciones</span>
-                                    <i class="fa fa-caret-down" style="float-right"></i>
-                                </a>
-                                <ul class="sub">
-                                    <li><a href="frm_cartera.php">Cargar Cartera</a></li>
-                                    <li><a href="frm_asignacion.php">Asignar Carga de Trabajo</a></li>
-                                    <li><a href="imprimircartera.php">Imprimir Cartera</a></li>
-                                    <li><a href="font_awesome.html">Reporte Mandatorio</a></li>
-                                    <li><a href="frm_paqueteria.php">Guia de Paqueteria</a></li>
-                                    <li><a href="frm_relacion.php">Supervisor > Gestor</a></li>
-                                </ul>
-                            </li>
-                            <li class="sub-menu">
-                                <a href="javascript:;">
-                                    <i class=" fa fa-bar-chart-o"></i>
-                                    <span>Reportes</span>
-                                    <i class="fa fa-caret-down" style="float-right"></i>
-                                </a>
-                                <ul class="sub">
-                                    <li><a href="frm_verasignacion.php">Ver Asignacion</a></li>
-                                    <li><a href="frm_consutacobertura.php">Consultar Cobertura</a></li>
-                                    <li><a href="frm_consulta.php">Consultar Cuentas</a></li>
-                                    <li><a href="flot_chart.html">Rendimiento Gestores</a></li>
-                                </ul>
-                            </li>
-                            <li class="sub-menu">
-                                <a href="javascript:;">
-                                    <i class="fa fa-th"></i>
-                                    <span>Recuperacion</span>
-                                    <i class="fa fa-caret-down" style="float-right"></i>
-                                </a>
-                                <ul class="sub">
-                                    <li><a href="frm_capguia.php">Captura de recuperacion</a></li>
-                                    <li><a href="frm_validarrecuperacion.php">Validar Recuperacion</a></li>
-                                    <li><a href="frm_cierrarecuperacion.php">Cerrar Recuperaciones</a></li>
-                                    <li><a href="frm_cierrareactivacion.php">Cerrar Reactivaciones</a></li>
-                                    <li><a href="frm_cierranegativas.php">Cerrar Negativas</a></li>
-                                    <li><a href="frm_controltickets.php">Control de Tickets</a></li>
-                                    <li><a href="frm_pendientestickets.php">Pendientes en Tickets</a></li>
-                                    <li><a href="frm_fotosrechazadas.php">Fotos Rechazadas</a></li>
-                                </ul>
-                            </li>
-                            <li class="sub-menu">
-                                <a href="javascript:;">
-                                    <i class="fa fa-book"></i>
-                                    <span>Ayuda</span>
-                                    <i class="fa fa-caret-down" style="float-right"></i>
-                                </a>
-                                <ul class="sub">
-                                    <li><a href="blank.html">Manual de Operacion</a></li>
-                                    <li><a href="login.html">Acerca de...</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <!-- sidebar menu end-->
-                    </div>
-                </aside>
-            </div>
-
+            <jsp:include page="internas/botonesNavegacion.jsp"/>
+            
             <section class="container col-md-12 prueba">
                 <div id="main">
                     <div class="container">
                         <div class="logoG">
-                            <h2>SISTEMA DE ADMINISTRACION ISP</h2>
+                            <h2>SISTEMA DE ADMINISTRACION SACSAVD</h2>
                         </div>
                     </div>
                 </div>
             </section>
-
         </main>
-
-        <!-- LISTADO CLIENTES-->
 
 
         <!--PIE DE PAGINA-->

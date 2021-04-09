@@ -3,12 +3,6 @@ $(document).ready(function () {
     console.log("Liston");
 });
 
-$("#formulario").on("submit", function (e) {
-    e.preventDefault();
-    let formData = new FormData(document.querySelector("#formulario"));
-    console.log(formData);
-});
-
 function cargarArchivo(elemento) { //obtiene el nombre del file y se lo agrega al input type=" 
     const file = elemento.files[0];
     const objHidden = document.formulario.nombre;

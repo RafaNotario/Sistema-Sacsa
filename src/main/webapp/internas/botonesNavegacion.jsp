@@ -37,6 +37,9 @@
     </div>
 </section>
     
+            <!-- LISTADO CLIENTES-->
+        <jsp:include page="/WEB-INF/paginas/cliente/listadoClientes.jsp"/>
+    
 
 
 
