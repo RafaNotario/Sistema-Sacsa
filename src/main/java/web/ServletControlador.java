@@ -52,7 +52,6 @@ public class ServletControlador extends HttpServlet {
         }
         ous.close();
         is.close();
-
         //lo pinta en el iframe
         out.println("Bienvenidp" + nomb);
         try {//procesa el excel enviado

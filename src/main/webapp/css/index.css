@@ -148,3 +148,9 @@ a.closebtn{
 .sub{
     display: none;
 }
+
+.alertArchivo {
+    display: flex;
+    align-items: center;
+    color: red;
+}

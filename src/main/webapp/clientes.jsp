@@ -21,20 +21,17 @@
         <!-- BOTONES DE NAVEGACION-->
         <main>
             <jsp:include page="WEB-INF/paginas/comunes/menuLateral.jsp"/>
-
-            <jsp:include page="internas/botonesNavegacion.jsp"/>
-            
             <section class="container col-md-12 prueba">
                 <div id="main">
                     <div class="container">
                         <div class="logoG">
                             <h2>SISTEMA DE ADMINISTRACION SACSAVD</h2>
+                            <h3>Bienvenido</h3>
                         </div>
                     </div>
                 </div>
             </section>
         </main>
-
 
         <!--PIE DE PAGINA-->
         <jsp:include page="WEB-INF/paginas/comunes/piePagina.jsp"/>

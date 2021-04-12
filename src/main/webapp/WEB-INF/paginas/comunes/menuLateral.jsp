@@ -5,7 +5,7 @@
             <img src="img/sacsavd_logo.png" class="img-fluid" alt="Logo SACSAVD"><!--class="img-fluid" alt="Responsive image" -->
         </center>
         <a class="closebtn" href="javascript:void(0)" onclick="closeNav()">&times;</a>
-        <a id="asist" href="#"> USUARIOS</a>
+        <a id="asist" class="asist" href="#"> USUARIOS</a>
         <a id="alta" href="#">CARTERAS</a>
         <a id="ver" href="#">STATUS</a>
         <a id="pagos" href="#">VER TODOS</a>

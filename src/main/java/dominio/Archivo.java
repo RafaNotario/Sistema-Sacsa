@@ -1,9 +1,9 @@
-
 package dominio;
 
-public class Archivo {
-    private int id;//int
-    private int idUsuario; //int
+public class Archivo{
+
+    private int id;//int PK
+    private int idUsuario; //int FK
     private String nombre;//varchar
     private String fecha;//datetime
     private int tipoCart;//int
@@ -12,13 +12,12 @@ public class Archivo {
 
     public Archivo() {
     }
-
     public Archivo(int id) {
         this.id = id;
     }
-    
-        public Archivo(int id, int idCliente,String nombre, String fech, int tipo, int statC, int numR) {  
-        this.id = idCliente;
+//construstor con todos los campos
+    public Archivo(int id, int idCliente, String nombre, String fech, int tipo, int statC, int numR) {
+        this.id = id;
         this.idUsuario = idCliente;
         this.nombre = nombre;
         this.fecha = fech;
@@ -26,7 +25,7 @@ public class Archivo {
         this.statusCarg = statC;
         this.numRegist = numR;
     }
-
+//constructor sin Pk ni FK
     public Archivo(String nombre, String fech, int tipo, int statC, int numR) {
         this.nombre = nombre;
         this.fecha = fech;
@@ -34,8 +33,8 @@ public class Archivo {
         this.statusCarg = statC;
         this.numRegist = numR;
     }
-
-    public Archivo(int idCliente,String nombre, String fech, int tipo, int statC, int numR) {        
+ //constructor sin PK
+    public Archivo(int idCliente, String nombre, String fech, int tipo, int statC, int numR) {
         this.idUsuario = idCliente;
         this.nombre = nombre;
         this.fecha = fech;
@@ -104,5 +103,5 @@ public class Archivo {
     public String toString() {
         return "Archivo{" + "id=" + id + ", idUsuario=" + idUsuario + ", nombre=" + nombre + ", fecha=" + fecha + ", tipoCart=" + tipoCart + ", statusCarg=" + statusCarg + ", numRegist=" + numRegist + '}';
     }
-   
+
 }

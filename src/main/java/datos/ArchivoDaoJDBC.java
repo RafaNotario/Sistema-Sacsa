@@ -65,7 +65,6 @@ public class ArchivoDaoJDBC {
             stmt.setInt(4, archivo.getTipoCart());
             stmt.setInt(5, archivo.getStatusCarg());
             stmt.setInt(6, archivo.getNumRegist());
-
             rows = stmt.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace(System.out);
