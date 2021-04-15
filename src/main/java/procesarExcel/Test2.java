@@ -1,10 +1,4 @@
-
 package procesarExcel;
-//import controllerInsert.controller;
-//import org.apache.poi.openxml4j.opc.OPCPackage;
-//import org.apache.poi.xssf.eventusermodel.XSSFReader;
-//import org.apache.poi.xssf.model.SharedStringsTable;
-//import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -31,11 +25,11 @@ public class Test2 {
 
     static datesControl datCtrl = new datesControl();
     static controller cont = new controller();
+//recibe ruta de archivo a leer, tipo de cartera e id de archivo insertado en la tabla
 
-    public static void lee(String ruta) throws Exception {
+    public static void lee(String ruta, int typeCartera, int idArchi) throws Exception {
         File test = new File(".");
         //test.getAbsolutePath()+"/src/main/resources/empty_cell Chinese name.xlsx";
-
         OPCPackage pkg = OPCPackage.open(ruta);
         XSSFReader r = new XSSFReader(pkg);
         InputStream in = r.getSheet("rId1");
@@ -46,104 +40,115 @@ public class Test2 {
         SharedStringsTable sst = r.getSharedStringsTable();
         //sst.writeTo(System.out);
         XMLReader parser = XMLReaderFactory.createXMLReader();//"org.apache.xerces.parsers.SAXParser"
-        List<List<String>> container = new ArrayList<>();
+        List<List<String>> container = new ArrayList<>();//Lista de listas
 //envia la hoja al analisis
         parser.setContentHandler(new Myhandler(sst, container));
         InputSource inputSource = new InputSource(in);
         parser.parse(inputSource);
         in.close();
-//imprimelos valores
-        Test2.printContainerSepararIrdsOFSC(container);
-    }
+//obtiene los valores
+        switch (typeCartera) {
+            case 1://HEAT
+                System.err.println("entro a TEST2 HEAT */-*/- 9- */-  -* 8 -* /8");
+                Test2.printContainerSepararIRDSHEAT(container, idArchi);
+                List<List<String>> nuevasHEAT = cont.getNewsCuentas();
 
-    public static void printContainer(List<List<String>> container) {
-        int contador = 1;
-        for (List<String> stringList : container) {
-            System.out.print(contador + "-");
-            //System.out.print(contador + " tam : " + stringList.size());
-            //   if (stringList.size() != 38) {
-            for (String str : stringList) {
-                System.out.printf("%10s", str + " | ");
-            }
-            //  }
-            /*  */
-            contador++;
-            System.out.println("");
+                Test2.printContainerSepararIRDSHEAT(nuevasHEAT, -1);
+                 cont.endTruncateAux();
+
+                break;
+            case 2://OFSC
+                System.err.println("entro a TEST2 OFSC */-*/- 9- */-  -* 8 -* /8");
+                Test2.printContainerSepararIrdsOFSC(container, idArchi);
+                //Realiza busqueda de nuevos y los inserta
+                List<List<String>> nuevas = cont.getNewsCuentas();
+                Test2.printContainerSepararIrdsOFSC(nuevas, -1);
+                cont.endTruncateAux();
+                break;
+            case 3://cobranzaCampo
+                break;
+            case 4://ModemsEspecial
+                break;
+            case 5://Urgente
+                break;
+            default:
+                break;
         }
+
     }
 
-
-        //para OFSC acumulado general llena correctamente tablas
-    public static void printContainerSepararIrdsOFSC(List<List<String>> container) throws SQLException {
+    //para OFSC acumulado general llena correctamente tablas
+    public static void printContainerSepararIrdsOFSC(List<List<String>> container, int idArchivon) throws SQLException {
         int contador = cont.getLastdtosCli(),
                 val = 0;//controla list externa filas del documento
+        boolean bandera = true;//existen registros en tabla principal
         if (contador == -1) {//tabla datosclientes vacia
             contador = 0;
+            bandera = false;
         }
-        System.err.println("cont Tam: " + container.size());
+        System.err.println("cont Tamoaoakoajosj*-*-*-*//*-*-*-*-*: " + container.size());
         String aux = "",
-                auxTel="",
+                auxTel = "",
                 cadenaInSert = "";
 //        System.err.println("tam: " + container.size());
         for (List<String> stringList : container) {
             if (val > 0 && contador > 0) { //&& contador < 150
                 cadenaInSert += "('" + Integer.toString(contador) + "','";
-              //  cadenaInSerTel += "('" + Integer.toString(contador) + "','";
-                aux = cad1Tab1OFSC(stringList);
-                cadenaInSert += aux + "),\n";
+                //  cadenaInSerTel += "('" + Integer.toString(contador) + "','";
+                aux = cad1Tab1OFSC(stringList, idArchivon);
+                cadenaInSert += aux + "'),\n";
             }//if
             contador++;//indice de tabla sql devuelta
             val++;//indice de archivo actual
             if (val % 150 == 0 || val == container.size()) {//&& acum != 0 
                 cadenaInSert = cadenaInSert.replaceFirst(".$", "");//datoscliente
-                System.out.print(cadenaInSert+" % ");
-                cadenaInSert = "";
-            }
-        }
-        //   System.out.print(contador);
-    }
-    
-    
-    //para HEAT acumulado general llena correctamente tablas
-    public static void printContainerSepararIRDS(List<List<String>> container) throws SQLException {
-        int contador = cont.getLastdtosCli(),
-                val = 0;//controla list externa filas del documento
-        if (contador == -1) {//tabla datosclientes vacia
-            contador = 0;
-        }
-        System.err.println("cont: " + container.size());
-        String aux = "",
-                auxTel="",
-                cadenaInSert = "",
-                cadenaInSerTel = "";
-//        System.err.println("tam: " + container.size());
-        for (List<String> stringList : container) {
-            if (val > 0 && contador > 0) { //&& contador < 150
-                cadenaInSert += "('" + Integer.toString(contador) + "','";
-                cadenaInSerTel += "('" + Integer.toString(contador) + "','";
-                aux = arrayTab1HEAT(stringList)[0];
-                auxTel = arrayTab1HEAT(stringList)[1];
-                cadenaInSert += aux + "),\n";
-                cadenaInSerTel += auxTel + "),\n";
-            }//if
-            contador++;//indice de tabla sql devuelta
-            val++;//indice de archivo actual
-            if (val % 150 == 0 || val == container.size()) {//&& acum != 0 
-                cadenaInSert = cadenaInSert.replaceFirst(".$", "");//datoscliente
-                cadenaInSerTel = cadenaInSerTel.replaceFirst(".$", "");//telefono
-                try {
-                    // guarda HEAT ->
-                    cont.GuardaPart1datosCliente(cadenaInSert,0);//0=datoscliente
-                    cont.GuardaPart1datosCliente(cadenaInSerTel,1);//1=telefonos
-                } catch (SQLException ex) {
-                    Logger.getLogger(Test2.class.getName()).log(Level.SEVERE, null, ex);
+                if (bandera && idArchivon != -1) {
+                    cont.GuardaPart1datosClienteAux(cadenaInSert, 0);//0=datoscliente tabla Auxiliar
+                } else {
+                    System.err.println("bandera && idArchivon != -1 else  */*/*/*/-/-/**/-/--*/-*/-*/-*");
+                    cont.GuardaPart1datosCliente(cadenaInSert, 0);//0=datoscliente tabla principal
                 }
-                System.out.print(cadenaInSert+" % "+cadenaInSerTel);
+                //System.out.print(cadenaInSert + " % ");
                 cadenaInSert = "";
-                cadenaInSerTel = "";
             }
         }
-        //   System.out.print(contador);
+    }
+
+    //para HEAT acumulado general llena correctamente tablas
+    public static void printContainerSepararIRDSHEAT(List<List<String>> container, int idArchivon) throws SQLException {
+        int contador = cont.getLastdtosCli(),
+                val = 0;//controla list externa filas del documento
+        boolean bandera = true;//existen registros en tabla principal
+        if (contador == -1) {//tabla datosclientes vacia
+            contador = 0;
+            bandera = false;
+        }
+        System.err.println("cont Tamoaoakoajosj*-*-*-*//*-*-*-*-*: " + container.size());
+        String aux = "",
+                auxTel = "",
+                cadenaInSert = "";
+//        System.err.println("tam: " + container.size());
+        for (List<String> stringList : container) {
+            if (val > 0 && contador > 0) { //&& contador < 150
+                cadenaInSert += "('" + Integer.toString(contador) + "','";
+                //  cadenaInSerTel += "('" + Integer.toString(contador) + "','";
+                aux = cad1Tab1HEAT(stringList, idArchivon);
+                cadenaInSert += aux + "'),\n";
+            }//if
+            contador++;//indice de tabla sql devuelta
+            val++;//indice de archivo actual
+            if (val % 150 == 0 || val == container.size()) {//&& acum != 0 
+                cadenaInSert = cadenaInSert.replaceFirst(".$", "");//datoscliente
+                if (bandera && idArchivon != -1) {
+                    cont.GuardaPart1datosClienteAux(cadenaInSert, 0);//0=datoscliente tabla Auxiliar
+                } else {
+                    System.err.println("!bandera || idArchivon = -1 else  */*/*/*/-/-/**/-/--*/-*/-*/-*");
+                    cont.GuardaPart1datosCliente(cadenaInSert, 0);//0=datoscliente tabla principal
+                }
+                System.out.print(cadenaInSert + " % ");
+                cadenaInSert = "";
+            }
+        }//for
     }
 
     /*FOR INTERNO:
@@ -161,69 +166,131 @@ public class Test2 {
     // }//for_interno*/
     //Read the stream, view the contents of the file xml to analize
     //Llena tabla 1 datoscliente con HEAT
-    public static String cad1Tab1HEAT(List<String> param, int opc) {
-        int index = 0;
-        String cad = "'";
-        cad += param.get(0) + "','";
-        cad += param.get(1) + "','";
-        cad += param.get(3) + "','";
-        cad += param.get(4) + "','";
-        cad += datCtrl.setDateActualGuion() + "','";//fecha del sistema
-        cad += param.get(2) + "','";
-        cad += param.get(5) + "','";
-        cad += param.get(32) + "','";
-        cad += param.get(33) + "','";
-        cad += param.get(34) + "','";
-        cad += param.get(35) + "','";
-        cad += param.get(36) + "','";
-        cad += param.get(37) + "','";
-        cad += param.get(38) + "','";
-        cad += param.get(39) + "','";
-        cad += param.get(40) + "','";
-        cad += param.get(42) + "','";
-        cad += param.get(43) + "','";
-        cad += param.get(44) + "','";
-        cad += param.get(65) + "','";
-        cad += param.get(66) + "','";
-        cad += param.get(67) + "','";
-        cad += param.get(19) + "','";
-        cad += datCtrl.setDateActualGuion() + "','";     //Fecha Estatus SS
-        cad += "" + "','";
-        cad += "" + "','";
-        cad += "0'";
+    public static String cad1Tab1HEAT(List<String> param, int idArch) {
+        System.out.println("tamañon: -*-**-*-*-**-/" + param.size()+" ID aRCHIVON : -*--*/- "+idArch);
+        String cad = "";
+        if (idArch != -1) {
+            cad += param.get(0) + "','";
+            cad += param.get(1) + "','";
+            cad += param.get(3) + "','";
+            cad += param.get(4) + "','";
+            cad += datCtrl.setDateActualGuion() + "','";//fecha del sistema
+            cad += param.get(2) + "','";
+            cad += param.get(5) + "','";
+            cad += param.get(32) + "','";
+            cad += param.get(33) + "','";
+            cad += param.get(34) + "','";
+            cad += param.get(35) + "','";
+            cad += param.get(36) + "','";
+            cad += param.get(37) + "','";
+            cad += param.get(38) + "','";
+            cad += param.get(39) + "','";
+            cad += param.get(40) + "','";
+            cad += param.get(42) + "','";
+            cad += param.get(43) + "','";
+            cad += param.get(44) + "','";
+            cad += param.get(65) + "','";
+            cad += param.get(66) + "','";
+            cad += param.get(67) + "','";
+            cad += param.get(19) + "','";
+            cad += datCtrl.setDateActualGuion() + "','";     //Fecha Estatus SS
+            cad += "" + "','";
+            cad += "" + "','";
+            cad += Integer.toString(idArch);//27
+        } else {
+            System.out.println("entro val archvon HEAT-**-*--**: "+idArch);
+            cad += param.get(0) + "','";
+            cad += param.get(1) + "','";
+            cad += param.get(2) + "','";
+            cad += param.get(3) + "','";
+            cad += param.get(4) + "','";
+            cad += param.get(5) + "','";
+            cad += param.get(6) + "','";
+            cad += param.get(7) + "','";
+            cad += param.get(8) + "','";
+            cad += param.get(9) + "','";
+            cad += param.get(10) + "','";
+            cad += param.get(11) + "','";
+            cad += param.get(12) + "','";
+            cad += param.get(13) + "','";
+            cad += param.get(14) + "','";
+            cad += param.get(15) + "','";
+            cad += param.get(16) + "','";
+            cad += param.get(17) + "','";
+            cad += param.get(18) + "','";
+            cad += param.get(19) + "','";
+            cad += param.get(20) + "','";
+            cad += param.get(21) + "','";
+            cad += param.get(22) + "','";
+            cad += param.get(23) + "','";
+            cad += param.get(24) + "','";
+            cad += param.get(25) + "','";
+            cad += param.get(26);//27
+        }
         return cad;
     }
 
-    public static String[] arrayTab1HEAT(List<String> param) {
+    public static String[] arrayTab1HEAT(List<String> param, int idArch) {
         String[] cad = new String[2];
-        cad[0] = param.get(0) + "','";
-        cad[0] += param.get(1) + "','";
-        cad[0] += param.get(3) + "','";
-        cad[0] += param.get(4) + "','";
-        cad[0] += datCtrl.setDateActualGuion() + "','";//fecha del sistema
-        cad[0] += param.get(2) + "','";
-        cad[0] += param.get(5) + "','";
-        cad[0] += param.get(32) + "','";
-        cad[0] += param.get(33) + "','";
-        cad[0] += param.get(34) + "','";
-        cad[0] += param.get(35) + "','";
-        cad[0] += param.get(36) + "','";
-        cad[0] += param.get(37) + "','";
-        cad[0] += param.get(38) + "','";
-        cad[0] += param.get(39) + "','";
-        cad[0] += param.get(40) + "','";
-        cad[0] += param.get(42) + "','";
-        cad[0] += param.get(43) + "','";
-        cad[0] += param.get(44) + "','";
-        cad[0] += param.get(65) + "','";
-        cad[0] += param.get(66) + "','";
-        cad[0] += param.get(67) + "','";
-        cad[0] += param.get(19) + "','";
-        cad[0] += datCtrl.setDateActualGuion() + "','";     //Fecha Estatus SS
-        cad[0] += "" + "','";
-        cad[0] += "" + "','";
-        cad[0] += "0'";
-        cad[1] = param.get(0) + "','";
+        if (idArch != -1) {
+            cad[0] += param.get(0) + "','";
+            cad[0] += param.get(1) + "','";
+            cad[0] += param.get(3) + "','";
+            cad[0] += param.get(4) + "','";
+            cad[0] += datCtrl.setDateActualGuion() + "','";//fecha del sistema
+            cad[0] += param.get(2) + "','";
+            cad[0] += param.get(5) + "','";
+            cad[0] += param.get(32) + "','";
+            cad[0] += param.get(33) + "','";
+            cad[0] += param.get(34) + "','";
+            cad[0] += param.get(35) + "','";
+            cad[0] += param.get(36) + "','";
+            cad[0] += param.get(37) + "','";
+            cad[0] += param.get(38) + "','";
+            cad[0] += param.get(39) + "','";
+            cad[0] += param.get(40) + "','";
+            cad[0] += param.get(42) + "','";
+            cad[0] += param.get(43) + "','";
+            cad[0] += param.get(44) + "','";
+            cad[0] += param.get(65) + "','";
+            cad[0] += param.get(66) + "','";
+            cad[0] += param.get(67) + "','";
+            cad[0] += param.get(19) + "','";
+            cad[0] += datCtrl.setDateActualGuion() + "','";     //Fecha Estatus SS
+            cad[0] += "" + "','";
+            cad[0] += "" + "','";
+            cad[0] += Integer.toString(idArch);//inserta idDearchivo donde se saca ese registro
+        } else {
+            System.out.println("Entro a archivon -1 2222foijf/-*/-*/-*///-*/-/-/-/--/-/-/*-/");
+            cad[0] += param.get(0) + "','";
+            cad[0] += param.get(1) + "','";
+            cad[0] += param.get(2) + "','";
+            cad[0] += param.get(3) + "','";
+            cad[0] += param.get(4) + "','";
+            cad[0] += param.get(5) + "','";
+            cad[0] += param.get(6) + "','";
+            cad[0] += param.get(7) + "','";
+            cad[0] += param.get(8) + "','";
+            cad[0] += param.get(9) + "','";
+            cad[0] += param.get(10) + "','";
+            cad[0] += param.get(11) + "','";
+            cad[0] += param.get(12) + "','";
+            cad[0] += param.get(13) + "','";
+            cad[0] += param.get(14) + "','";
+            cad[0] += param.get(15) + "','";
+            cad[0] += param.get(16) + "','";
+            cad[0] += param.get(17) + "','";
+            cad[0] += param.get(18) + "','";
+            cad[0] += param.get(19) + "','";
+            cad[0] += param.get(20) + "','";
+            cad[0] += param.get(21) + "','";
+            cad[0] += param.get(22) + "','";
+            cad[0] += param.get(23) + "','";
+            cad[0] += param.get(24) + "','";
+            cad[0] += param.get(25) + "','";
+            cad[0] += param.get(26);//27
+        }
+        /*     cad[1] = param.get(0) + "','";
         cad[1] += param.get(1) + "','";
         cad[1] += param.get(6) + "','";
         cad[1] += param.get(7) + "','";
@@ -234,42 +301,71 @@ public class Test2 {
         cad[1] += param.get(56) + "','";
         cad[1] += param.get(57) + "','";
         cad[1] += param.get(58) + "','";
-        cad[1] += param.get(59) + "'";
+        cad[1] += param.get(59) + "'";*/
         return cad;
     }
 
     //Llena tabla 1 datoscliente con OFSC
-    public static String cad1Tab1OFSC(List<String> param) {
-        int index = 0;
-        String aux = "";
+    public static String cad1Tab1OFSC(List<String> param, int paramIdArch) {
         String cad = "";
-        cad += param.get(1) + "','";
-        cad += param.get(0) + "','";
-        cad += "0000-00-00" + "','";
-        cad += datCtrl.setDateActualGuion() + "','";
-        cad += datCtrl.setDateActualGuion() + "','";//fecha del sistema
-        cad += param.get(18) + "','";
-        cad += param.get(16) + "','";
-        cad += param.get(19) + "','";
-        cad += param.get(20) + "','";
-        cad += param.get(21) + "','";
-        cad += param.get(24) + "','";
-        cad += param.get(25) + "','";
-        cad += param.get(26) + "','";
-        cad += param.get(27) + "','";
-        cad += param.get(22) + "','";
-        cad += param.get(23) + "','";
-        cad += param.get(30) + "','";
-        cad += "" + "','";
-        cad += "" + "','";
-        cad += "" + "','";
-        cad += param.get(28) + "','";
-        cad += param.get(29) + "','";
-        cad += "Abierta" + "','";
-        cad += datCtrl.setDateActualGuion() + "','";     //Fecha Estatus SS
-        cad += "" + "','";
-        cad += "" + "','";
-        cad += "1'";
+        if (paramIdArch != -1) {
+            cad += param.get(1) + "','";
+            cad += param.get(0) + "','";
+            cad += "0000-00-00" + "','";
+            cad += datCtrl.setDateActualGuion() + "','";
+            cad += datCtrl.setDateActualGuion() + "','";//fecha del sistema
+            cad += param.get(18) + "','";
+            cad += param.get(16) + "','";
+            cad += param.get(19) + "','";
+            cad += param.get(20) + "','";
+            cad += param.get(21) + "','";
+            cad += param.get(24) + "','";
+            cad += param.get(25) + "','";
+            cad += param.get(26) + "','";
+            cad += param.get(27) + "','";
+            cad += param.get(22) + "','";
+            cad += param.get(23) + "','";
+            cad += param.get(30) + "','";
+            cad += "" + "','";
+            cad += "" + "','";
+            cad += "" + "','";
+            cad += param.get(28) + "','";
+            cad += param.get(29) + "','";
+            cad += "Abierta" + "','";
+            cad += datCtrl.setDateActualGuion() + "','";     //Fecha Estatus SS
+            cad += "" + "','";
+            cad += "" + "','";
+            cad += Integer.toString(paramIdArch);//27
+        } else {
+            System.out.println("Entro a archivon -1 2222foijf/-*/-*/-*///-*/-/-/-/--/-/-/*-/");
+            cad += param.get(0) + "','";
+            cad += param.get(1) + "','";
+            cad += param.get(2) + "','";
+            cad += param.get(3) + "','";
+            cad += param.get(4) + "','";
+            cad += param.get(5) + "','";
+            cad += param.get(6) + "','";
+            cad += param.get(7) + "','";
+            cad += param.get(8) + "','";
+            cad += param.get(9) + "','";
+            cad += param.get(10) + "','";
+            cad += param.get(11) + "','";
+            cad += param.get(12) + "','";
+            cad += param.get(13) + "','";
+            cad += param.get(14) + "','";
+            cad += param.get(15) + "','";
+            cad += param.get(16) + "','";
+            cad += param.get(17) + "','";
+            cad += param.get(18) + "','";
+            cad += param.get(19) + "','";
+            cad += param.get(20) + "','";
+            cad += param.get(21) + "','";
+            cad += param.get(22) + "','";
+            cad += param.get(23) + "','";
+            cad += param.get(24) + "','";
+            cad += param.get(25) + "','";
+            cad += param.get(26);//27
+        }
         return cad;
     }
 
@@ -282,7 +378,7 @@ public class Test2 {
         }
     }
 
-    public static void main(String[] args) {
+    /*  public static void main(String[] args) {
         Test2 ts = new Test2();
         String file = "A://PRUEBAS SISTEMA/HEAT NEW/01032021/Servicios Aplicados De Cobranza Mercantil Vd Sa De Cv VeTV - Etapa   3.xlsx";
         //  String file = "A://PRUEBAS SISTEMA/OFSC/SERVICIOS_APLICADOS_DE_COBRANZA_MERCANTIL_VD_01032021.xlsx";
@@ -291,11 +387,11 @@ public class Test2 {
         } catch (Exception ex) {
             Logger.getLogger(Test2.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
+    }*/
 }
 
 class Myhandler extends DefaultHandler {
+
     //Take the value corresponding to the index of SST
     private SharedStringsTable sst;
 

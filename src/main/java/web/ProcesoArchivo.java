@@ -2,8 +2,10 @@ package web;
 
 import datos.ArchivoDaoJDBC;
 import datos.ClienteDaoJDBC;
+import datos.cuentaDaoJDBC;
 import dominio.Archivo;
 import dominio.Cliente;
+import dominio.cuenta;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,7 +34,7 @@ public class ProcesoArchivo extends HttpServlet {
 
     Test2 procesarExcel = new Test2();//clase procesa excel
     controller cont = new controller();//clase valida con DB
-    String warningArch = "Pruebononona";
+    String warningArch = "";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -42,6 +44,9 @@ public class ProcesoArchivo extends HttpServlet {
             switch (accion) {
                 case "eliminar"://acion del boton >>Editar del form principal
                     this.eliminarArchivo(request, response);
+                    break;
+                case "detallon"://acion del boton >>Editar del form principal
+                    this.verdetalleArchivon(request, response);
                     break;
                 default:
                     this.accionDefault(request, response);
@@ -70,14 +75,32 @@ public class ProcesoArchivo extends HttpServlet {
     private void eliminarArchivo(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //REcuperamos datos del formulario editarCliente
-        int idCliente = Integer.parseInt(request.getParameter("idCliente"));
+        int idArc = Integer.parseInt(request.getParameter("idArchivo"));
         //Crear el objeto cliente
-        Archivo archivo = new Archivo(idCliente);
+        Archivo archivo = new Archivo(idArc);
         //Eliminar en la base de datos
-        //      int registrosModificados = new ArchivoDaoJDBC().eliminar(archivo);
-        //  System.err.println("Registros modificados: " + registrosModificados);
+        int registrosModificados = new ArchivoDaoJDBC().eliminar(archivo);
+        try {
+            cont.elimaRow(idArc);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProcesoArchivo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.err.println("Registros modificados: " + registrosModificados);
         //Redirigir hacia la accion default
         this.accionDefault(request, response);
+    }
+
+    private void verdetalleArchivon(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //recuperar el idCliente
+        int idArch = Integer.parseInt(request.getParameter("idArchivo"));
+        List<cuenta> cuentas = new cuentaDaoJDBC().encontrar(idArch);
+        request.setAttribute("cuentas", cuentas);
+        request.setAttribute("idArchivo", idArch);
+        request.setAttribute("totalArchivos", cuentas.size());
+        String jspEditar = "/WEB-INF/paginas/cliente/editarCliente.jsp";
+        request.getRequestDispatcher(jspEditar).forward(request, response);
     }
 
     /**
@@ -105,7 +128,6 @@ public class ProcesoArchivo extends HttpServlet {
         } else {
             this.accionDefault(request, response);
         }
-
     }
 
     private void cargaCartera(HttpServletRequest request, HttpServletResponse response)
@@ -122,16 +144,11 @@ public class ProcesoArchivo extends HttpServlet {
                 //si existe archivo.nombre ver si ya ha sido cargado en el dia
                 if (cont.validaExistArchivo(nomb)) {
                     //si ya existe archivo cargado manda alerta y redirige a default
-                    warningArch = "Archivo <b>" + nomb + "</b> ya ha sido cargado <br> verifique porfavor.";
+                    warningArch = "Archivo <br> <b>" + nomb + "</b> <br> ya ha sido cargado <br> verifique porfavor.";
                     this.accionDefault(request, response);
                 } else {
                     cargaArchivo(request, response);//lo copia en el servior
                     insertarArchivo(request, response);//guarda el nombre en la tabla
-                    try {//procesa el excel enviado
-                        procesarExcel.lee("A:/Archivos/" + nomb);
-                    } catch (Exception ex) {
-                        Logger.getLogger(ProcesoArchivo.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                     /*           switch (opcCartera) {
                 case "ofsc"://insertar en tipoCartera = 1
                 insertarArchivo(request, response);
@@ -156,11 +173,12 @@ public class ProcesoArchivo extends HttpServlet {
                 tipoCart = request.getParameter("opcion");//obtener DateTime
         int tipCart = 0;
         switch (tipoCart) {
+            case "heat":
+                System.out.println("web.ProcesoArchivo.insertarArchivo() heat heat ejay");
+                tipCart = 1;
+                break;
             case "ofsc":
                 tipCart = 2;
-                break;
-            case "heat":
-                tipCart = 1;
                 break;
             case "cobcampo":
                 tipCart = 3;
@@ -176,9 +194,17 @@ public class ProcesoArchivo extends HttpServlet {
         Archivo archivo = new Archivo(Integer.parseInt(idU), nombre, timeDate, tipCart, 1, 100);
         //Insertar en la base de datos
         int registrosModificados = new ArchivoDaoJDBC().insertar(archivo);
-        System.out.println("Registris modificados: " + registrosModificados);
 
-        warningArch = "Archivo <b>" + nombre + "</b> gurdado correctamente.";
+        System.out.println("Registros modificados: " + registrosModificados);
+
+        try {//procesa el excel enviado
+            int lastArchRegistrado = cont.getLastdIdArchi();//obtiene ultimo insertado
+            procesarExcel.lee("A:/Archivos/" + nombre, tipCart, lastArchRegistrado);
+
+        } catch (Exception ex) {
+            Logger.getLogger(ProcesoArchivo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        warningArch = "Archivo <br>  <b>" + nombre + "</b> <br>gurdado correctamente.";
         this.accionDefault(request, response);
     }//@end_insertarArchivo
 

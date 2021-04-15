@@ -15,7 +15,8 @@ public class ArchivoDaoJDBC {
     
     //accion eliminar registros de este archivo poner statusCarga = 0:Cancelado
     private static final String SQL_UPDATE = "UPDATE archivo SET statusCarga = ? WHERE id = ?";
-   // private static final String SQL_DELETE = "DELETE FROM cliente WHERE id_cliente = ? ";
+    
+    private static final String SQL_DELETE = "DELETE FROM archivo WHERE id = ? ";
 
     public List<Archivo> listarArchivosAll() {
         Connection conn = null;
@@ -74,6 +75,26 @@ public class ArchivoDaoJDBC {
         }
         return rows;
     }
+    
+        public int eliminar(Archivo archivo) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        int rows = 0;
+//            ResultSet rs = null;//es para recuperar informacion
+        try {
+            conn = Conexion.getConnection();
+            stmt = conn.prepareStatement(SQL_DELETE);
+            stmt.setInt(1, archivo.getId());
+            rows = stmt.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            Conexion.close(stmt);
+            Conexion.close(conn);
+        }
+        return rows;
+    }
+
 
 
 /*   

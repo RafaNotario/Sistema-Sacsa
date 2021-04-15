@@ -47,8 +47,8 @@
                                         </c:choose>
                                     </td>
                                     <td>
-                                        <a href="${pageContext.request.contextPath}/ProcesoArchivo?accion=editar&idArchivo=${archivo.id}"
-                                           class="btn btn-secondary"><i class="fas fa-angle-double-right"></i>Editar
+                                        <a href="${pageContext.request.contextPath}/ProcesoArchivo?accion=detallon&idArchivo=${archivo.id}"
+                                           class="btn btn-secondary"><i class="fas fa-angle-double-right"></i>Detalle
                                         </a>
                                     </td>
                                 </tr>

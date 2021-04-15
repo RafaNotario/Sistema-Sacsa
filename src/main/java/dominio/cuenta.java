@@ -8,7 +8,7 @@ public class cuenta {
     private String ssolicitud_OT;
     private String nombre;
     private String status;
-    private String saldo;
+    private String cp;
 
     public cuenta() {
     }
@@ -25,13 +25,13 @@ public class cuenta {
 //        this.saldo = saldo;
     }
 
-    public cuenta(int idCuenta, String cuenta, String solicitud, String nombre, String status, String saldo) {
+    public cuenta(int idCuenta, String cuenta, String solicitud, String nombre, String status, String cp) {
         this.id = idCuenta;
         this.numCuenta = cuenta;
         this.ssolicitud_OT = solicitud;
         this.nombre = nombre;
         this.status = status;
-        this.saldo = saldo;
+        this.cp = cp;
     }
 
     public int getId() {
@@ -74,17 +74,17 @@ public class cuenta {
         this.status = status;
     }
 
-    public String getSaldo() {
-        return saldo;
+    public String getCp() {
+        return cp;
     }
 
-    public void setSaldo(String saldo) {
-        this.saldo = saldo;
+    public void setCp(String cp) {
+        this.cp = cp;
     }
 
     @Override
     public String toString() {
-        return "cuenta{" + "id=" + id + ", numCuenta=" + numCuenta + ", ssolicitud_OT=" + ssolicitud_OT + ", nombre=" + nombre + ", status=" + status + ", saldo=" + saldo + '}';
+        return "cuenta{" + "id=" + id + ", numCuenta=" + numCuenta + ", ssolicitud_OT=" + ssolicitud_OT + ", nombre=" + nombre + ", status=" + status + ", C.P.=" + cp + '}';
     }
 
 

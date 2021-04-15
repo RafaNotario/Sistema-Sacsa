@@ -150,7 +150,6 @@ a.closebtn{
 }
 
 .alertArchivo {
-    display: flex;
-    align-items: center;
+    position: relative;
     color: red;
 }

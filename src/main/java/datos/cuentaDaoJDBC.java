@@ -7,10 +7,10 @@ import java.util.*;
 
 public class cuentaDaoJDBC {
 
-    private static final String SQL_SELECT = "SELECT id, numCuenta,ssolicitud_OT,nombre,status, IF(cartera =0,'HEAT','OFSC') AS cartera"
-            + " FROM datoscliente WHERE id >= 100274 AND id <= 100300 limit 50";
-    private static final String SQL_SELECT_BY_ID = "SELECT id_cliente, nombre, apellido, email, telefono, saldo"
-            + " FROM cliente WHERE id_cliente = ? ";
+    private static final String SQL_SELECT = "SELECT id, numCuenta,ssolicitud_OT,nombre,status,cp"
+            + " FROM datoscliente;";
+    private static final String SQL_SELECT_BY_ID = "SELECT id, numCuenta,ssolicitud_OT,nombre,status,cp"
+            + " FROM datoscliente WHERE cartera = ? limit 25";
     private static final String SQL_INSERT = "INSERT INTO cliente(nombre, apellido, email, telefono, saldo) "
             + " VALUES (?, ?, ?, ?, ?) ";
     private static final String SQL_UPDATE = "UPDATE cliente SET nombre = ?, apellido=?,email=?,telefono=?,saldo=? "
@@ -48,7 +48,44 @@ public class cuentaDaoJDBC {
             Conexion.close(conn);
         }
         return clientes;
+    }//@endListar
+    
+        public List<cuenta> encontrar(int idArch) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<cuenta> cuentas = new ArrayList<>();
+        cuenta cuenta = null;
+        try {
+            conn = Conexion.getConnection();
+            stmt = conn.prepareStatement(SQL_SELECT_BY_ID);
+            stmt.setInt(1, idArch);//le agrega un parametro al statement
+            rs = stmt.executeQuery();
+            rs.absolute(1);//Nos posicionamos en el primer registro devuelto
+
+            while (rs.next()) {
+                int idCliente = rs.getInt("id");
+                String nombre = rs.getString("numCuenta");
+                String apellido = rs.getString("ssolicitud_OT");
+                String email = rs.getString("nombre");
+                String telefono = rs.getString("status");
+                String cartera = rs.getString("cp");
+
+                cuenta = new cuenta(idCliente, nombre, apellido, email, telefono,cartera);
+                cuentas.add(cuenta);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            Conexion.close(conn);
+        }
+        return cuentas;
     }
+    
+    
 /*
     public Cliente encontrar(Cliente cliente) {
         Connection conn = null;
@@ -156,8 +193,9 @@ public class cuentaDaoJDBC {
 */
 
     public static void main(String[] args) {
-        List<cuenta> clientes = new cuentaDaoJDBC().listar();
-        System.out.println("cuentas = "+clientes);
+        
+        List<cuenta> cuentonas = new cuentaDaoJDBC().encontrar(5);
+        System.out.println("cuentas = "+cuentonas.size());
     }
 
 }

@@ -28,7 +28,6 @@ public class ServletControlador extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         List<cuenta> clientes = new cuentaDaoJDBC().listar();
         //System.out.println("clientes = "+clientes);
         request.setAttribute("clientes", clientes);
@@ -55,7 +54,7 @@ public class ServletControlador extends HttpServlet {
         //lo pinta en el iframe
         out.println("Bienvenidp" + nomb);
         try {//procesa el excel enviado
-            procesarExcel.lee("A:/Archivos/" + nomb);
+            procesarExcel.lee("A:/Archivos/" + nomb,0,1212);
         } catch (Exception ex) {
             Logger.getLogger(ServletControlador.class.getName()).log(Level.SEVERE, null, ex);
         }

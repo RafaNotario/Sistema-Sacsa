@@ -32,9 +32,9 @@
                 </form>
             </div>
             <div class="col-md-4">    
-                <center>
-                    <span class="alertArchivo">   ${warningArch}  </span>        
-                </center>
+                <div class="form-group">
+                    <p class="alertArchivo container">   ${warningArch}  </p>      
+                </div>
             </div>
         </div>
 
